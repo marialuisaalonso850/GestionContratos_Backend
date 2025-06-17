@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
-const citaSchema = new mongoose.Schema({
+const contratoSchema = new mongoose.Schema({
     codigoContrato: {
         type: String,
         unique: true,
