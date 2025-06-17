@@ -8,9 +8,9 @@ const contratoSchema = new mongoose.Schema({
         default: uuidv4 
     },
     proceso: {
-        type: String,
-        required: true,
-        enum: ['Juridica', 'Dtic', 'Financiamiento']
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Proceso',
+        required: true
     },
     CorreoDependencia: {
         type: String,
@@ -27,7 +27,7 @@ const contratoSchema = new mongoose.Schema({
         required: true,
         enum: ['Prestación de servicios', 'Fijo', '...']
     },
-       objeto: {
+    objeto: {
         type: String,
         required: true,
         trim: true
@@ -38,8 +38,9 @@ const contratoSchema = new mongoose.Schema({
         trim: true
     },
     AbogadoAsignado: {
-        type: String,
-        required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Abogado',
+    required: true
     },
     FechaInicio: {
         type: Date,
@@ -91,4 +92,4 @@ const contratoSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Contrato', citaSchema);
+module.exports = mongoose.model('Contrato', contratoSchema);
