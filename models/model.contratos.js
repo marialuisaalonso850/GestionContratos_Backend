@@ -42,11 +42,11 @@ const citaSchema = new mongoose.Schema({
         required: true
     },
     FechaInicio: {
-        type: String,
+        type: Date,
         required: true
     },
     FechaFinalización: {
-        type: String,
+        type: Date,
         required: true
     },
     TeléfonoContratista: {
