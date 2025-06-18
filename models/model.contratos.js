@@ -23,9 +23,9 @@ const contratoSchema = new mongoose.Schema({
         default: uuidv4 
     },
     tipoContrato: {
-        type: String,
-        required: true,
-        enum: ['Prestación de servicios', 'Fijo', '...']
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'TipoContrato',
+        required: true
     },
     objeto: {
         type: String,
