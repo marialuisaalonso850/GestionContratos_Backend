@@ -9,8 +9,13 @@ const crearContratoService = async (datosContrato) => {
 const obtenerContratosService = async () => {
   return await Contrato.find();
 };
+const obtenerContratoPorIdService = async (id) => {
+  return await Contrato.findById(id);
+};
+
 
 module.exports = {
   crearContratoService,
-  obtenerContratosService
+  obtenerContratosService,
+  obtenerContratoPorIdService
 };
