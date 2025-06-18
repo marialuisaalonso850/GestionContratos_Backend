@@ -9,7 +9,7 @@ const {crearTipoContrato} = require('../controllers/TipoContrato.controller');
  *   post:
  *     summary: Crear Tipo Contato
  *     responses:
- *       200:
+ *       201:
  *         description: crear nuevo tipoContrato
  */
 router.post('/CreartipoContrato',crearTipoContrato);
