@@ -1,5 +1,6 @@
 const { enviarCodigoCorreo } = require('./email.service');
 const Usuario = require('../models/model.Usuario');
+const { crearToken } = require('../middlewares/verificarToken.js');
 
 const codigosTemporales = {}; 
 
@@ -11,7 +12,9 @@ const usuario = await Usuario.findOne({ correo: correoBuscado });
   if (!usuario) {
     throw new Error('El correo no está registrado');
   }
-
+  const token = crearToken(usuario);
+  console.log(token);
+  
   const codigo = Math.floor(100000 + Math.random() * 900000);
 
   codigosTemporales[correo] = {
@@ -21,12 +24,14 @@ const usuario = await Usuario.findOne({ correo: correoBuscado });
 
   await enviarCodigoCorreo(correo, codigo);
 
-  return true;
+   return { token, mensaje: 'Código enviado al correo' };
 };
 
 
-const verificarCodigoService = (correo, codigoIngresado) => {
+const verificarCodigoService = (correo, codigoIngresado,token) => {
   const dato = codigosTemporales[correo];
+  console.log(token);
+  
 
   if (!dato || Date.now() > dato.expiracion) {
     return { success: false, message: 'Código inválido o expirado' };

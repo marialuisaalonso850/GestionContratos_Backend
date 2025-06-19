@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { crearContrato, obtenerContratos } = require('../controllers/contratos.controller');
+const {verificarToken} = require('../middlewares/verificarToken.js');
+const verificarRol = require('../middlewares/verificarRol.js');
 
 /**
  * @swagger
@@ -60,7 +62,9 @@ const { crearContrato, obtenerContratos } = require('../controllers/contratos.co
  *         description: Contrato creado exitosamente
  */
 
-router.post('/crearContrato', crearContrato);
+router.post('/crearContrato',verificarToken, crearContrato);
+
+
 
 /**
  * @swagger

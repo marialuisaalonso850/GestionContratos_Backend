@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const {enviarCodigo,verificarCodigo} = require('../controllers/login.controller');
+const {verificarToken} = require('../middlewares/verificarToken.js');
+const verificarRol = require('../middlewares/verificarRol.js')
 
 /**
  * @swagger
@@ -8,10 +10,11 @@ const {enviarCodigo,verificarCodigo} = require('../controllers/login.controller'
  *   post:
  *     summary: Ingresar y Enviar codigo Login
  *     responses:
- *       200:
+ *       201:
  *         description: Codigo Login por correo
  */
 router.post('/enviar-codigo', enviarCodigo);
+
 
 /**
  * @swagger
@@ -19,9 +22,9 @@ router.post('/enviar-codigo', enviarCodigo);
  *   post:
  *     summary: Verificar Codigo
  *     responses:
- *       200:
+ *       201:
  *         description: Verificar login
  */
-router.post('/verificar-codigo',verificarCodigo);
+router.post('/verificar-codigo',verificarToken,verificarRol(['admin']), verificarCodigo);
 
 module.exports = router;
