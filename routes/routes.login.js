@@ -9,6 +9,8 @@ const verificarRol = require('../middlewares/verificarRol.js')
  * /api/auth/enviar-codigo:
  *   post:
  *     summary: Ingresar y Enviar codigo Login
+ *     tags:
+ *       - Login o Usuario
  *     responses:
  *       201:
  *         description: Codigo Login por correo
@@ -21,6 +23,8 @@ router.post('/enviar-codigo', enviarCodigo);
  * /api/auth/verificar-codigo:
  *   post:
  *     summary: Verificar Codigo
+ *     tags:
+ *       - Login o Usuario
  *     responses:
  *       201:
  *         description: Verificar login

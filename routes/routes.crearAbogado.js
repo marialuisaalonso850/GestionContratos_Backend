@@ -7,6 +7,8 @@ const {crearAbogado,mostrarAbogado,unAbogado} = require('../controllers/abogado.
  * /api/abogado/crearAbogado:
  *   post:
  *     summary: Crear un nuevo abogado
+ *     tags:
+ *       - Abogados
  *     responses:
  *       201:
  *         description: Abogado creado exitosamente
@@ -17,6 +19,8 @@ router.post('/crearAbogado', crearAbogado);
  * /api/abogados/:
  *   get:
  *     summary: mostrar Abogados
+ *     tags:
+ *       - Abogados
  *     responses:
  *       201:
  *         description: Lista de Abogados
@@ -27,6 +31,8 @@ router.get('/', mostrarAbogado);
  * /api/abogados/:id:
  *   get:
  *     summary: mostrar Abogado
+ *     tags:
+ *       - Abogados
  *     responses:
  *       201:
  *         description: Abogado

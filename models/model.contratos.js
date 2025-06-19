@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Counter = require('./model.counter');
 
 const contratoSchema = new mongoose.Schema({
+   codigoContrato: {
+    type: String,
+    unique: true,
+     default: () => Math.floor(100 + Math.random() * 900)
+  },
   proceso: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Proceso',
@@ -63,6 +68,11 @@ const contratoSchema = new mongoose.Schema({
   fechaCreacion: {
     type: Date,
     default: Date.now
+  },
+  Vigencia: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Vigencia',
+    required: true
   }
 });
 

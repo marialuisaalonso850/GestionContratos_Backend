@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { crearContrato, obtenerContratos } = require('../controllers/contratos.controller');
+const { crearContrato, obtenerContratos,EliminarContratos,ActualizarContratos } = require('../controllers/contratos.controller');
 const {verificarToken} = require('../middlewares/verificarToken.js');
 const verificarRol = require('../middlewares/verificarRol.js');
 
@@ -62,9 +62,7 @@ const verificarRol = require('../middlewares/verificarRol.js');
  *         description: Contrato creado exitosamente
  */
 
-router.post('/crearContrato',verificarToken, crearContrato);
-
-
+router.post('/crearContrato', crearContrato);
 
 /**
  * @swagger
@@ -96,5 +94,8 @@ router.post('/crearContrato',verificarToken, crearContrato);
  */
 router.get('/', obtenerContratos);
 
+router.delete('/:id',verificarToken,verificarRol(['admin']),EliminarContratos)
+
+router.put("/:id",verificarToken,verificarRol(['admin']), ActualizarContratos );
 
 module.exports = router;

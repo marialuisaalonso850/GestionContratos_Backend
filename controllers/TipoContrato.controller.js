@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const Tipo = require('../models/model.tipoContrato');
 
 
