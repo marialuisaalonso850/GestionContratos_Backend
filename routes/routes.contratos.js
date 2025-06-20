@@ -94,8 +94,30 @@ router.post('/crearContrato', crearContrato);
  */
 router.get('/', obtenerContratos);
 
+/**
+ * @swagger
+ * /api/contratos/:id:
+ *   delete:
+ *     summary: Eliminar Abogado
+ *     tags:
+ *       - contratos
+ *     responses:
+ *       201:
+ *         description: Eliminar Abogado
+ */
 router.delete('/:id',verificarToken,verificarRol(['admin']),EliminarContratos)
 
+/**
+ * @swagger
+ * /api/contratos/:id:
+ *   put:
+ *     summary: Actualizar Contrato
+ *     tags:
+ *       - contratos
+ *     responses:
+ *       201:
+ *         description: Actualizar contrato
+ */
 router.put("/:id",verificarToken,verificarRol(['admin']), ActualizarContratos );
 
 module.exports = router;

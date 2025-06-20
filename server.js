@@ -35,7 +35,7 @@ function getLocalIP() {
   }
   return 'localhost';
 }
-// ✅ Usar las rutas
+//  Usar las rutas
 app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(swaggerSpec));
 app.use('/api/abogados', abogadoRoutes);
 app.use('/api/procesos', procesosRoutes);

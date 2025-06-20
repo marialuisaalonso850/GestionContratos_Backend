@@ -15,4 +15,5 @@ const {crearTipoContrato} = require('../controllers/TipoContrato.controller');
  *         description: crear nuevo tipoContrato
  */
 router.post('/CreartipoContrato',crearTipoContrato);
+
 module.exports = router;
