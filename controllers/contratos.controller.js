@@ -27,11 +27,12 @@ const EliminarContratos = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al obtener contratos', error: err.message });
   }
 };
-
+//Error 
 const ActualizarContratos = async (req, res) => {
   try {
     const contratosUpdate = await updateContratoService();
     res.json(contratosUpdate );
+    
   } catch (err) {
     res.status(500).json({ mensaje: 'Error al obtener contratos', error: err.message });
   }

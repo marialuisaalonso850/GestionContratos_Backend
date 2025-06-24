@@ -10,11 +10,29 @@ const contratoSchema = new mongoose.Schema({
   proceso: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Proceso',
-    required: true
+    required: true,
+    historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ]
   },
   CorreoDependencia: {
     type: String,
-    trim: true
+    trim: true,
+    historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ]
   },
   consecutivo: {
     type: String,
@@ -23,26 +41,117 @@ const contratoSchema = new mongoose.Schema({
   tipoContrato: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TipoContrato',
-    required: true
+    required: true,
+    historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ]
   },
-  objeto: { type: String, required: true, trim: true },
-  NombreContratista: { type: String, required: true, trim: true },
+  objeto: { type: String,
+     required: true,
+      trim: true,
+      historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ]
+    },
+  NombreContratista: { type: String, 
+    required: true, 
+    trim: true,
+  historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ] },
   AbogadoAsignado: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Abogado',
-    required: true
+    required: true,
+    historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ]
   },
-  FechaInicio: { type: Date, required: true },
-  FechaFinalización: { type: Date, required: true },
-  TeléfonoContratista: { type: String, required: true, trim: true },
+  FechaInicio: { type: Date, required: true,
+    historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ]
+   },
+  FechaFinalización: { type: Date,
+     required: true,
+    historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ]
+   },
+  TeléfonoContratista: { type: String,
+     required: true,
+     trim: true,
+    historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ] },
   EstadoContrato: {
     type: String,
     required: true,
-    enum: ['Vigente', 'Vencido', 'ProximoVencer']
+    enum: ['Vigente', 'Vencido', 'ProximoVencer'],
+    historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ]
   },
   Adicion: {
     type: Boolean,
-    required: true
+    required: true,
+    historial: [
+    {
+      campo: String,
+      anterior: mongoose.Schema.Types.Mixed,
+      nuevo: mongoose.Schema.Types.Mixed,
+      usuario: String,
+      fecha: { type: Date, default: Date.now }
+    }
+  ]
   },
   TipoAdicion: {
     type: String,

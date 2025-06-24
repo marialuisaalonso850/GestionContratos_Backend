@@ -10,6 +10,11 @@ const AbogadoSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true
+  },
+  EstadoAbogado: {
+    type: String,
+    required: true,
+    enum: ['Activo', 'Finalizado']
   }
 });
 

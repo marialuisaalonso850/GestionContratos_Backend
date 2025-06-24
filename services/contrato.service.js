@@ -19,6 +19,7 @@ const crearContratoService = async (datosContrato) => {
     contratoGuardado.NombreContratista
   );
 
+
   return contratoGuardado;
 };
 
@@ -43,24 +44,49 @@ const eliminarContratosService = async()=>{
 }
 
 async function updateContratoService(req, res) {
+  const nuevosDatos = req.body;
+  console.log(nuevosDatos);
+  
+  const usuario = req.usuario?.nombre || 'Sistema'; 
+   console.log(usuario);
+
   try {
-    const contrato = await Contrato.findByIdAndUpdate(
-      req.params.id,
-      {
-        proceso: req.body.proceso,
-        CorreoDependencia: req.body.CorreoDependencia,
-        objeto: req.body.objeto,
-        FechaInicio: req.body.FechaInicio,
-        
-      },
-      { new: true }
-    );
-    if (!contrato) return res.status(404).send("contrato not found");
-    res.send(contrato);
+    const contrato = await Contrato.findById(req.params.id);
+
+    if (!contrato) return res.status(404).send("Contrato no encontrado");
+
+    const historialNuevasEntradas = [];
+
+    // Compara campo por campo
+    for (let campo in nuevosDatos) {
+      if (contrato[campo] !== undefined && contrato[campo] !== nuevosDatos[campo]) {
+        historialNuevasEntradas.push({
+          campo,
+          anterior: contrato[campo],
+          nuevo: nuevosDatos[campo],
+          usuario,
+          fecha: new Date()
+        });
+
+        contrato[campo] = nuevosDatos[campo]; 
+      }
+    }
+
+    // Guardar cambios solo si hubo modificaciones
+    if (historialNuevasEntradas.length > 0) {
+      contrato.historial.push(...historialNuevasEntradas);
+      await contrato.save();
+      res.json({ mensaje: 'Contrato actualizado con historial guardado', contrato });
+    } else {
+      res.json({ mensaje: 'No hubo cambios en los campos', contrato });
+    }
+
   } catch (error) {
-    res.status(500).send(error);
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error en la actualización', error });
   }
 }
+
 
 module.exports = {
   crearContratoService,

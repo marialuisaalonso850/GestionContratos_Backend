@@ -9,6 +9,7 @@ const procesosRoutes = require('./routes/routes.procesos')
 const tipoRoutes = require('./routes/routes.TipoContrato');
 const LoginRoutes = require('./routes/routes.login');
 const ContratosRoutes = require('./routes/routes.contratos')
+const lectura = require('./routes/routes.leerArchivo')
 const os = require('os');
 
 const app = express();
@@ -41,7 +42,9 @@ app.use('/api/abogados', abogadoRoutes);
 app.use('/api/procesos', procesosRoutes);
 app.use('/api/tipoContrato', tipoRoutes);
 app.use('/api/auth', LoginRoutes); 
-app.use('/api/contrato', ContratosRoutes)
+app.use('/api/contrato', ContratosRoutes);
+app.use('/api/exportar', lectura)
+
 
 
 app.listen(config.port, '0.0.0.0', () => {

@@ -6,10 +6,15 @@ const loginSchema = new mongoose.Schema({
     required: false,
     trim: true
   },
+   nombre:{
+ type: String,
+    required: false,
+    trim: true
+  },
   rol: {
     type: String,
-    enum: ['admin', 'usuario'], 
-    default: 'usuario' 
+    enum: ['admin', 'Invitado','SuperAdministrador'], 
+    default: 'Invitado' 
   }
 });
 

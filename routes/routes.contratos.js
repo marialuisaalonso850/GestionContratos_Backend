@@ -98,12 +98,12 @@ router.get('/', obtenerContratos);
  * @swagger
  * /api/contratos/:id:
  *   delete:
- *     summary: Eliminar Abogado
+ *     summary: Eliminar Contrato
  *     tags:
- *       - contratos
+ *       - Contratos
  *     responses:
  *       201:
- *         description: Eliminar Abogado
+ *         description: Eliminar contrato
  */
 router.delete('/:id',verificarToken,verificarRol(['admin']),EliminarContratos)
 
@@ -113,7 +113,7 @@ router.delete('/:id',verificarToken,verificarRol(['admin']),EliminarContratos)
  *   put:
  *     summary: Actualizar Contrato
  *     tags:
- *       - contratos
+ *       - Contratos
  *     responses:
  *       201:
  *         description: Actualizar contrato
