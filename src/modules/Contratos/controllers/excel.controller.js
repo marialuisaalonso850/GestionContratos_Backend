@@ -3,7 +3,7 @@ const path = require('path');
 const iconv = require('iconv-lite');
 
 
-const buffer = fs.readFileSync(path.join(__dirname, '../dtcontratos.json'));
+const buffer = fs.readFileSync(path.join(__dirname, '../utils/dtcontratos.json'));
 
 const utf8Text = iconv.decode(buffer, 'latin1');
 
@@ -50,9 +50,6 @@ function limpiarContrato(raw) {
 
   };
 }
-
-
-
 
 const contratosLimpios = datosContratosCrudos.map(limpiarContrato);
 

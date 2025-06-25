@@ -1,29 +1,11 @@
-const express = require('express');
-const mongoose = require('mongoose');
+
 require('dotenv').config();
-const swaggerUi = require('swagger-ui-express')
-const swaggerSpec = require('./swagger')
-const config = require('./config/index');
-const abogadoRoutes = require('./routes/routes.crearAbogado');
-const procesosRoutes = require('./routes/routes.procesos')
-const tipoRoutes = require('./routes/routes.TipoContrato');
-const LoginRoutes = require('./routes/routes.login');
-const ContratosRoutes = require('./routes/routes.contratos')
-const lectura = require('./routes/routes.leerArchivo')
 const os = require('os');
+const config = require('./src/modules/Contratos/config/index');
+const app = require('./src/app');
 
-const app = express();
-const PORT = 3000;
+const PORT = config.port || process.env.PORT || 3000;
 
-app.use(express.json()); 
-
-
-mongoose.connect(config.mongoUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('Conectado a MongoDB :)'))
-.catch((err) => console.error(' Error de conexión:', err));
 
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
@@ -36,19 +18,9 @@ function getLocalIP() {
   }
   return 'localhost';
 }
-//  Usar las rutas
-app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(swaggerSpec));
-app.use('/api/abogados', abogadoRoutes);
-app.use('/api/procesos', procesosRoutes);
-app.use('/api/tipoContrato', tipoRoutes);
-app.use('/api/auth', LoginRoutes); 
-app.use('/api/contrato', ContratosRoutes);
-app.use('/api/exportar', lectura)
 
-
-
-app.listen(config.port, '0.0.0.0', () => {
-  console.log(`Servidor Express escuchando en http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Servidor Express escuchando en http://localhost:${PORT}`);
   const ip = getLocalIP();
-  console.log(`🚀 Swagger disponible en: http://${ip}:${config.port}/api-docs`);
+  console.log(`📚 Swagger disponible en: http://${ip}:${PORT}/api-docs`);
 });
