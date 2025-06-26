@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { contratosLimpios } = require('../controllers/excel.controller');
+const { contratosLimpiosLim } = require('../controllers/excel.controller');
+const { FiltrarConsecutivo } = require('../controllers/excel.controller');
 
-router.get('/contratosLimpios', contratosLimpios);
+router.get('/contratosLimpios', contratosLimpiosLim);
+
+router.get('/filtroCon/:codigo',FiltrarConsecutivo)
 
 module.exports = router;
