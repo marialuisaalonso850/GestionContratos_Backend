@@ -9,7 +9,6 @@ const utf8Text = iconv.decode(buffer, 'latin1');
 
 const jsonCompleto = JSON.parse(utf8Text);
 
-
 const tablaContratos = jsonCompleto.find(
   item => item.type === 'table' && item.name === 'dtcontratos'
 );
@@ -56,42 +55,17 @@ const contratosLimpios = datosContratosCrudos.map(limpiarContrato);
 
 const FiltrarConsecutivo = (req, res) => {
   const { codigo } = req.params;
-  const filePath = path.join(__dirname, '../utils/dtcontratos.json');
+  const consecutivoBuscado = parseInt(codigo);
 
-  try {
-    let rawData = fs.readFileSync(filePath, 'utf-8').trim();
+  const contrato = contratosLimpios.find(
+    c => c.consecutivo === consecutivoBuscado
+  );
 
-    // Verifica si empieza con '['. Si no, lo convertimos en arreglo válido
-    if (!rawData.startsWith('[')) {
-      
-      rawData = `[${rawData.replace(/}\s*{/g, '},{')}]`;
-    }
-
-    const json = JSON.parse(rawData);
-
-    if (!Array.isArray(json)) {
-      return res.status(500).json({ mensaje: 'Estructura JSON inválida: no es un array' });
-    }
-
-    const tabla = json.find(obj => obj.type === 'table' && obj.name === 'dtcontratos');
-
-    if (!tabla || !Array.isArray(tabla.data)) {
-      return res.status(500).json({ mensaje: 'Estructura JSON inválida: no se encontró la tabla contratos o no tiene data' });
-    }
-
-    const contrato = tabla.data.find(c => c.idconsecutivo === codigo);
-    console.log(c.idconsecutivo);
-    
-
-    if (!contrato) {
-      return res.status(404).json({ mensaje: 'Contrato no encontrado' });
-    }
-
-    return res.json(contrato);
-  } catch (error) {
-    console.error(' Error al procesar el archivo JSON:', error);
-    return res.status(500).json({ mensaje: 'Error al leer el archivo' });
+  if (!contrato) {
+    return res.status(404).json({ mensaje: 'Contrato no encontrado' });
   }
+
+  return res.json(contrato);
 };
 
  const contratosLimpiosLim = (req, res) => {

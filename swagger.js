@@ -10,7 +10,7 @@ const options = {
       description: "Documentación de mi API con Swagger",
     },
   },
-  apis: ["./routes/*.js"], 
+  apis: ["./src/modules/Contratos/routes/*.js"], 
 };
 
 const swaggerSpec = swaggerJSDoc(options);
