@@ -8,7 +8,7 @@ const crearToken = (usuario) => {
     rol: usuario.rol || 'usuario'
   };
 
-  const token = jwt.sign(payload, SECRET, { expiresIn: '1h' });
+  const token = jwt.sign(payload, SECRET, { expiresIn: '2h' });
   return token;
 };
 

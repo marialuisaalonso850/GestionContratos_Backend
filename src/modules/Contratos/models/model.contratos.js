@@ -126,6 +126,7 @@ const contratoSchema = new mongoose.Schema({
       fecha: { type: Date, default: Date.now }
     }
   ] },
+  //30 dias alerta, 15 y 10 cambia estado a los
   EstadoContrato: {
     type: String,
     required: true,

@@ -19,6 +19,7 @@ const verificarRol = require('../middlewares/verificarRol.js');
  *             type: object
  *             required:
  *               - proceso
+ *               - correoDependencia
  *               - tipoContrato
  *               - objeto
  *               - NombreContratista
@@ -34,6 +35,11 @@ const verificarRol = require('../middlewares/verificarRol.js');
  *               tipoContrato:
  *                 type: string
  *                 example: 6655c2f0bdb8b7c79fa8d111
+ *               correoDependencia:
+ *                type : string 
+ *                format: email
+ *                example: usuario@ejemplo.com
+ *                description: Correo electrónico válido
  *               objeto:
  *                 type: string
  *                 example: Contratar servicios de soporte técnico

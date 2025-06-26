@@ -21,20 +21,31 @@ const obtenerContratos = async (req, res) => {
 
 const EliminarContratos = async (req, res) => {
   try {
-    const contratosEliminar = await eliminarContratosService();
-    res.json(contratosEliminar);
+    const contrato = await eliminarContratosService(req.params.id);
+    res.json(contrato);
   } catch (err) {
-    res.status(500).json({ mensaje: 'Error al obtener contratos', error: err.message });
+    const mensaje =
+      err.message === 'Contrato no encontrado'
+        ? 'Contrato no encontrado'
+        : 'Error al obtener contratos';
+    res.status(500).json({ mensaje, error: err.message });
   }
 };
-//Error 
+ 
 const ActualizarContratos = async (req, res) => {
+  const { id } = req.params;
+  const nuevosDatos = req.body;
+  const usuario = req.usuario?.nombre || 'Sistema';
+
   try {
-    const contratosUpdate = await updateContratoService();
-    res.json(contratosUpdate );
-    
-  } catch (err) {
-    res.status(500).json({ mensaje: 'Error al obtener contratos', error: err.message });
+    const resultado = await updateContratoService(id, nuevosDatos, usuario);
+    res.json(resultado);
+  } catch (error) {
+    if (error.message === 'Contrato no encontrado') {
+      res.status(404).json({ mensaje: error.message });
+    } else {
+      res.status(500).json({ mensaje: 'Error en la actualización', error: error.message });
+    }
   }
 };
 

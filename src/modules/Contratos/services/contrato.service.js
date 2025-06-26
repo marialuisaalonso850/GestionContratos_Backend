@@ -1,7 +1,30 @@
 const Contrato = require('../models/model.contratos');
 const {ContratoCreado} = require('./email.service')
 
+
+const validarCorreo = (correo) => {
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(correo);
+};
+
+const noNumeros = (texto) => {
+  const regex = /^[^\d]+$/;
+  return regex.test(texto);
+};
+
 const crearContratoService = async (datosContrato) => {
+  const { CorreoDependencia, NombreContratista } = datosContrato;
+
+ 
+  if (!CorreoDependencia || !validarCorreo(CorreoDependencia)) {
+    throw new Error('Correo electrónico inválido o faltante');
+  }
+
+
+  if (!noNumeros(NombreContratista)) {
+    throw new Error('El nombre del contratista no puede contener números');
+  }
+
   const nuevoContrato = new Contrato(datosContrato);
   await nuevoContrato.save();
 
@@ -12,17 +35,15 @@ const crearContratoService = async (datosContrato) => {
 
   await ContratoCreado(
     contratoGuardado.CorreoDependencia,
-    contratoGuardado.proceso.nombreProceso,         
+    contratoGuardado.proceso?.nombreProceso,
     contratoGuardado.CorreoDependencia,
     contratoGuardado.consecutivo,
-    contratoGuardado.tipoContrato.tipoContrato,    
+    contratoGuardado.tipoContrato?.tipoContrato,
     contratoGuardado.NombreContratista
   );
 
-
   return contratoGuardado;
 };
-
 
 
 const obtenerContratosService = async () => {
@@ -32,34 +53,31 @@ const obtenerContratoPorIdService = async (id) => {
   return await Contrato.findById(id);
 };
 
-const eliminarContratosService = async()=>{
-  try{
-    const contrato = await Contrato.findByIdAndDelete(req.params.id);
-     if (!contrato) return res.status(404).send("Contrato not found");
-
- res.send(contrato);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-}
-
-async function updateContratoService(req, res) {
-  const nuevosDatos = req.body;
-  console.log(nuevosDatos);
-  
-  const usuario = req.usuario?.nombre || 'Sistema'; 
-   console.log(usuario);
-
+const eliminarContratosService = async (id) => {
   try {
-    const contrato = await Contrato.findById(req.params.id);
+    const contrato = await Contrato.findByIdAndDelete(id);
+    if (!contrato) {
+      throw new Error('Contrato no encontrado');
+    }
+    return contrato;
+  } catch (error) {
+    throw new Error('Error interno al eliminar contratos');
+  }
+};
 
-    if (!contrato) return res.status(404).send("Contrato no encontrado");
+
+const updateContratoService = async (id, nuevosDatos, usuario = 'Sistema') => {
+  try {
+    const contrato = await Contrato.findById(id);
+    if (!contrato) throw new Error('Contrato no encontrado');
 
     const historialNuevasEntradas = [];
 
-    // Compara campo por campo
     for (let campo in nuevosDatos) {
-      if (contrato[campo] !== undefined && contrato[campo] !== nuevosDatos[campo]) {
+      if (
+        contrato[campo] !== undefined &&
+        contrato[campo] !== nuevosDatos[campo]
+      ) {
         historialNuevasEntradas.push({
           campo,
           anterior: contrato[campo],
@@ -68,24 +86,30 @@ async function updateContratoService(req, res) {
           fecha: new Date()
         });
 
-        contrato[campo] = nuevosDatos[campo]; 
+        contrato[campo] = nuevosDatos[campo];
       }
     }
 
-    // Guardar cambios solo si hubo modificaciones
     if (historialNuevasEntradas.length > 0) {
+      if (!Array.isArray(contrato.historial)) {
+        contrato.historial = [];
+      }
       contrato.historial.push(...historialNuevasEntradas);
       await contrato.save();
-      res.json({ mensaje: 'Contrato actualizado con historial guardado', contrato });
+      return {
+        mensaje: 'Contrato actualizado con historial guardado',
+        contrato
+      };
     } else {
-      res.json({ mensaje: 'No hubo cambios en los campos', contrato });
+      return {
+        mensaje: 'No hubo cambios en los campos',
+        contrato
+      };
     }
-
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ mensaje: 'Error en la actualización', error });
+    throw error;
   }
-}
+};
 
 
 module.exports = {
