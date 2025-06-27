@@ -7,7 +7,7 @@ const {crearTipoContrato} = require('../controllers/TipoContrato.controller');
  * @swagger
  * /api/tipoContrato/CreartipoContrato:
  *   post:
- *     summary: Crear Tipo Contato
+ *     summary: Crear Tipo Contrato
  *     tags:
  *       - Contratos
  *     responses:

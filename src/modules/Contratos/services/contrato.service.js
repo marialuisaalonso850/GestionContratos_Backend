@@ -14,9 +14,8 @@ const noNumeros = (texto) => {
   return regex.test(texto);
 };
 
-
 const crearContratoService = async (datosContrato, usuario) => {
-  const { CorreoDependencia, NombreContratista, FechaFinalización } = datosContrato;
+  const { CorreoDependencia, NombreContratista, FechaInicio, FechaFinalización } = datosContrato;
 
   if (!CorreoDependencia || !validarCorreo(CorreoDependencia)) {
     throw new Error('Correo electrónico inválido o faltante');
@@ -24,6 +23,22 @@ const crearContratoService = async (datosContrato, usuario) => {
 
   if (!noNumeros(NombreContratista)) {
     throw new Error('El nombre del contratista no puede contener números');
+  }
+
+  const hoy = dayjs().startOf('day');
+  const fechaInicio = dayjs(FechaInicio);
+  const fechaFin = dayjs(FechaFinalización);
+
+  if (fechaInicio.isBefore(hoy)) {
+    throw new Error(`La fecha de inicio (${FechaInicio}) no puede ser anterior a hoy (${hoy.format('YYYY-MM-DD')})`);
+  }
+
+  if (fechaFin.isBefore(hoy)) {
+    throw new Error(`La fecha de finalización (${FechaFinalización}) no puede ser anterior a hoy (${hoy.format('YYYY-MM-DD')})`);
+  }
+
+  if (fechaInicio.isAfter(fechaFin)) {
+    throw new Error(`La fecha de inicio (${FechaInicio}) no puede ser posterior a la fecha de finalización (${FechaFinalización})`);
   }
 
   const nuevoContrato = new Contrato({
@@ -34,14 +49,11 @@ const crearContratoService = async (datosContrato, usuario) => {
 
   await nuevoContrato.save();
 
-  // Obtener contrato completo con populate
   const contratoGuardado = await Contrato.findById(nuevoContrato._id)
     .populate('proceso', 'nombreProceso')
     .populate('tipoContrato', 'tipoContrato')
     .populate('AbogadoAsignado', 'nombreAbogado');
 
-  const hoy = dayjs();
-  const fechaFin = dayjs(FechaFinalización);
   const diasRestantes = fechaFin.diff(hoy, 'day');
   const diasDeAlerta = obtenerDiasDeAlerta();
 
@@ -54,9 +66,9 @@ const crearContratoService = async (datosContrato, usuario) => {
     console.log(`📨 Enviando alerta inmediata (faltan ${diasRestantes} días)...`);
 
     await enviarCorreo(
-      contratoGuardado.CorreoDependencia,
+      usuario.email,
       `🔔 Alerta inmediata: contrato ${contratoGuardado.consecutivo} está próximo a vencer`,
-      `El contrato con el contratista ${contratoGuardado.NombreContratista} vence en ${diasRestantes} días (${fechaFin.format('YYYY-MM-DD')}).\nAbogado: ${contratoGuardado.AbogadoAsignado?.nombreAbogado || 'Sin asignar'}.\nTipoContrato: ${contratoGuardado.tipoContrato?.tipoContrato|| 'Sin asignar'}.\nProceso: ${contratoGuardado.proceso?.nombreProceso|| 'Sin asignar'}.`
+      `El contrato: ${contratoGuardado.NombreContratista} vence en ${diasRestantes} días (${fechaFin.format('YYYY-MM-DD')}).\nAbogado: ${contratoGuardado.AbogadoAsignado?.nombreAbogado || 'Sin asignar'}.\nTipoContrato: ${contratoGuardado.tipoContrato?.tipoContrato || 'Sin asignar'}.\nProceso: ${contratoGuardado.proceso?.nombreProceso || 'Sin asignar'}.`
     );
 
     contratoGuardado.alertasEnviadas.push(diasRestantes);
@@ -65,8 +77,8 @@ const crearContratoService = async (datosContrato, usuario) => {
     console.log('🔕 No se envía alerta: no coincide con los días de alerta configurados.');
   }
 
-  // Enviar correo de creación
   await ContratoCreado(
+    usuario.email,
     contratoGuardado.CorreoDependencia,
     contratoGuardado.proceso?.nombreProceso,
     contratoGuardado.CorreoDependencia,
@@ -74,10 +86,10 @@ const crearContratoService = async (datosContrato, usuario) => {
     contratoGuardado.tipoContrato?.tipoContrato,
     contratoGuardado.NombreContratista
   );
-
+  console.log(usuario.correo);
+  
   return contratoGuardado;
 };
-
 
 
 const obtenerContratosService = async () => {

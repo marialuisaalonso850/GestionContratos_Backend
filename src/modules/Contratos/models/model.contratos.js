@@ -91,8 +91,7 @@ const contratoSchema = new mongoose.Schema({
     }
   ]
   },
-  //no debe ser mayor a la fecha actual
-  FechaInicio: { type: Date, required: true,
+  FechaInicio: { type: Date, required: false,
     historial: [
     {
       campo: String,
@@ -103,9 +102,8 @@ const contratoSchema = new mongoose.Schema({
     }
   ]
    },
-    //no debe ser mayor a la fecha actual
   FechaFinalización: { type: Date,
-     required: true,
+     required: false,
     historial: [
     {
       campo: String,
@@ -190,8 +188,8 @@ const contratoSchema = new mongoose.Schema({
   type: [Number],
   default: [] 
 }
-});
 
+});
 
 contratoSchema.pre('save', async function (next) {
   if (this.isNew && !this.consecutivo) {

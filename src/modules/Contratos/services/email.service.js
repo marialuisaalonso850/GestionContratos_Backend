@@ -51,7 +51,7 @@ async function enviarCodigoCorreo(destinatario, codigo) {
 const enviarCorreo = async (destinatario, asunto, mensajePlano) => {
   const htmlTemplate = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-      <div style="background-color: #004080; color: white; padding: 20px; text-align: center;">
+      <div style="background-color: #002d72; color: white; padding: 20px; text-align: center;">
         <h2 style="margin: 0;">🔔 ALERTA TEMPRANA</h2>
       </div>
       <div style="background-color: #ffffff; padding: 20px;">
@@ -66,7 +66,7 @@ const enviarCorreo = async (destinatario, asunto, mensajePlano) => {
   try {
     const info = await transporter.sendMail({
       from: '"EPA DTIC" <desarrollo.tic@epa.gov.co>',
-      to: config.emailUser,
+      to: destinatario,
       subject: asunto,
       text: mensajePlano,
       html: htmlTemplate
@@ -78,11 +78,11 @@ const enviarCorreo = async (destinatario, asunto, mensajePlano) => {
   }
 };
 
-async function ContratoCreado(destinatario, proceso, CorreoDependencia, consecutivo, tipoContrato, nombreContratista) {
+async function ContratoCreado(usuario, proceso, CorreoDependencia, consecutivo, tipoContrato, nombreContratista) {
   try {
     await transporter.sendMail({
       from: 'EPA DTIC <desarrollo.tic@epa.gov.co>',
-      to: destinatario,
+      to: usuario.correo,
       subject: "Contrato Creado",
       html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">

@@ -11,11 +11,13 @@ const LoginRoutes = require('./modules/Contratos/routes/routes.login');
 const ContratosRoutes = require('./modules/Contratos/routes/routes.contratos')
 const lectura = require('./modules/Contratos/routes/routes.leerArchivo')
 const router = express.Router();
+const cors = require('cors');
 const os = require('os');
 
 const app = express();
 const PORT = 3000;
 
+app.use(cors());
 app.use(express.json()); 
 
 
