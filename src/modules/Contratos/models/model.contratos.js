@@ -91,6 +91,7 @@ const contratoSchema = new mongoose.Schema({
     }
   ]
   },
+  //no debe ser mayor a la fecha actual
   FechaInicio: { type: Date, required: true,
     historial: [
     {
@@ -102,6 +103,7 @@ const contratoSchema = new mongoose.Schema({
     }
   ]
    },
+    //no debe ser mayor a la fecha actual
   FechaFinalización: { type: Date,
      required: true,
     historial: [
@@ -126,7 +128,7 @@ const contratoSchema = new mongoose.Schema({
       fecha: { type: Date, default: Date.now }
     }
   ] },
-  //30 dias alerta, 15 y 10 cambia estado a los
+  //30 dias alerta, 15 y 10 cambia estado a los estados
   EstadoContrato: {
     type: String,
     required: true,
@@ -183,8 +185,13 @@ const contratoSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Vigencia',
     required: true
-  }
+  },
+  alertasEnviadas: {
+  type: [Number],
+  default: [] 
+}
 });
+
 
 contratoSchema.pre('save', async function (next) {
   if (this.isNew && !this.consecutivo) {
@@ -196,9 +203,37 @@ contratoSchema.pre('save', async function (next) {
 
     this.consecutivo = String(counter.seq).padStart(2, '0');
   }
+  const hoy = new Date();
+  const fechaFin = new Date(this.FechaFinalización);
+  const diasRestantes = Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+  const estadoAnterior = this.EstadoContrato;
+  let nuevoEstado = estadoAnterior;
 
+  if (hoy > fechaFin) {
+    nuevoEstado = 'Vencido';
+  } else if (diasRestantes <= 30) {
+    nuevoEstado = 'ProximoVencer';
+  } else {
+    nuevoEstado = 'Vigente';
+  }
+
+  if (estadoAnterior !== nuevoEstado) {
+    this.EstadoContrato = nuevoEstado;
+
+    this.EstadoContrato.historial = this.EstadoContrato.historial || [];
+
+    this.historial = this.historial || [];
+    this.historial.push({
+      campo: 'EstadoContrato',
+      anterior: estadoAnterior,
+      nuevo: nuevoEstado,
+      usuario: this.usuarioModifico || 'sistema',
+      fecha: new Date()
+    });
+  }
 
   next();
 });
+
 
 module.exports = mongoose.model('Contrato', contratoSchema);
